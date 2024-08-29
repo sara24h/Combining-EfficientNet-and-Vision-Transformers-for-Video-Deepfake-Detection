@@ -40,8 +40,8 @@ def custom_video_round(preds):
         
 
 def get_method(video, data_path):
-    methods = os.listdir(os.path.join(data_path, "manipulated_sequences"))
-    methods.extend(os.listdir(os.path.join(data_path, "original_sequences")))
+    methods = os.listdir(os.path.join(data_path))
+    methods.extend(os.listdir(os.path.join(data_path)))
     methods.append("DFDC")
     methods.append("Original")
     selected_method = ""
