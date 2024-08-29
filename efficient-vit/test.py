@@ -36,12 +36,12 @@ import argparse
 
 
 MODELS_DIR = "models"
-BASE_DIR = "../../deep_fakes"
+BASE_DIR = "/content/Combining-EfficientNet-and-Vision-Transformers-for-Video-Deepfake-Detection"
 DATA_DIR = os.path.join(BASE_DIR, "dataset")
 TEST_DIR = os.path.join(DATA_DIR, "test_set")
 OUTPUT_DIR = os.path.join(MODELS_DIR, "tests")
 
-TEST_LABELS_PATH = os.path.join(BASE_DIR, "dataset/dfdc_test_labels.csv")
+TEST_LABELS_PATH = os.path.join(BASE_DIR, "data/dfdc_test_labels.csv")
 
 
 
@@ -50,6 +50,7 @@ if not os.path.exists(MODELS_DIR):
 
 if not os.path.exists(OUTPUT_DIR):
     os.makedirs(OUTPUT_DIR)
+
 
 def create_base_transform(size):
     return Compose([
