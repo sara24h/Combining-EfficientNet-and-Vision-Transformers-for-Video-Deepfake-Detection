@@ -31,14 +31,14 @@ import math
 import yaml
 import argparse
 
-BASE_DIR = '../../deep_fakes/'
+BASE_DIR = '/content/Combining-EfficientNet-and-Vision-Transformers-for-Video-Deepfake-Detection'
 DATA_DIR = os.path.join(BASE_DIR, "dataset")
 TRAINING_DIR = os.path.join(DATA_DIR, "training_set")
 VALIDATION_DIR = os.path.join(DATA_DIR, "validation_set")
 TEST_DIR = os.path.join(DATA_DIR, "test_set")
 MODELS_PATH = "models"
 METADATA_PATH = os.path.join(BASE_DIR, "data/metadata") # Folder containing all training metadata for DFDC dataset
-VALIDATION_LABELS_PATH = os.path.join(DATA_DIR, "dfdc_val_labels.csv")
+VALIDATION_LABELS_PATH = os.path.join(DATA_DIR, "data/dfdc_val_labels.csv")
 
 
 def read_frames(video_path, train_dataset, validation_dataset):
@@ -112,9 +112,10 @@ def read_frames(video_path, train_dataset, validation_dataset):
     # Select N frames from the collected ones
     for key in frames_paths_dict.keys():
         for index, frame_image in enumerate(frames_paths_dict[key]):
-            #image = transform(np.asarray(cv2.imread(os.path.join(video_path, frame_image))))
             image = cv2.imread(os.path.join(video_path, frame_image))
             if image is not None:
+                # Ensure image is resized to the expected size
+                image = cv2.resize(image, (config['model']['image-size'], config['model']['image-size']))
                 if TRAINING_DIR in video_path:
                     train_dataset.append((image, label))
                 else:
