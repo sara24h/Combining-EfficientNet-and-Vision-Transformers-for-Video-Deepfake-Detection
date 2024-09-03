@@ -18,10 +18,10 @@ def process_videos(videos, detector_cls: Type[VideoFaceDetector], selected_datas
     detector = face_detector.__dict__[detector_cls](device="cuda:0")
 
     dataset = VideoDataset(videos)
-    
+
     loader = DataLoader(dataset, shuffle=False, num_workers=opt.processes, batch_size=1, collate_fn=lambda x: x)
     missed_videos = []
-    for item in tqdm(loader): 
+    for item in tqdm(loader):
         result = {}
         video, indices, frames = item[0]
         if selected_dataset == 1:
@@ -35,11 +35,11 @@ def process_videos(videos, detector_cls: Type[VideoFaceDetector], selected_datas
         if os.path.exists(out_dir) and "{}.json".format(id) in os.listdir(out_dir):
             continue
         batches = [frames[i:i + detector._batch_size] for i in range(0, len(frames), detector._batch_size)]
-      
+
         for j, frames in enumerate(batches):
             result.update({int(j * detector._batch_size) + i : b for i, b in zip(indices, detector._detect_faces(frames))})
-        
-       
+
+
         os.makedirs(out_dir, exist_ok=True)
         print(len(result))
         if len(result) > 0:
@@ -67,7 +67,7 @@ def main():
     print(opt)
 
 
-    if opt.dataset.upper() == "DFDC":
+    if opt.dataset.upper() == "FACEFORENSICS":
         dataset = 0
     else:
         dataset = 1
