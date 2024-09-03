@@ -25,7 +25,7 @@ def extract_video(video, root_dir, dataset):
             bboxes_path = os.path.join(opt.data_path, "boxes", os.path.splitext(os.path.basename(video))[0] + ".json")
         else:
             bboxes_path = os.path.join(opt.data_path, "boxes", get_method_from_name(video), os.path.splitext(os.path.basename(video))[0] + ".json")
-        
+
         if not os.path.exists(bboxes_path) or not os.path.exists(video):
             return
         with open(bboxes_path, "r") as bbox_f:
@@ -54,10 +54,10 @@ def extract_video(video, root_dir, dataset):
                 h = ymax - ymin
                 p_h = 0
                 p_w = 0
-                
+
                 #p_h = h // 3
                 #p_w = w // 3
-                
+
                 #p_h = h // 6
                 #p_w = w // 6
 
@@ -70,21 +70,21 @@ def extract_video(video, root_dir, dataset):
                 h, w = crop.shape[:2]
                 crops.append(crop)
 
-            
-            
+
+
             os.makedirs(os.path.join(opt.output_path, id), exist_ok=True)
             for j, crop in enumerate(crops):
                 cv2.imwrite(os.path.join(opt.output_path, id, "{}_{}.png".format(i, j)), crop)
         if counter == 0:
-            print(video, counter)
+            print('done',video, counter)
     except e:
         print("Error:", e)
-    
+
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--dataset', default="DFDC", type=str,
+    parser.add_argument('--dataset', default="FACEFORENSICS", type=str,
                         help='Dataset (DFDC / FACEFORENSICS')
     parser.add_argument('--data_path', default='', type=str,
                         help='Videos directory')
@@ -93,14 +93,14 @@ if __name__ == '__main__':
 
     opt = parser.parse_args()
     print(opt)
-    
 
-    if opt.dataset.upper() == "DFDC":
+
+    if opt.dataset.upper() == "FACEFORENSICS":
         dataset = 0
     else:
         dataset = 1
-    
-    
+
+
     os.makedirs(opt.output_path, exist_ok=True)
     #excluded_videos = os.listdir(os.path.join(opt.output_dir)) # Useful to avoid to extract from already extracted videos
     excluded_videos = os.listdir(opt.output_path)
@@ -108,10 +108,10 @@ if __name__ == '__main__':
         paths = get_video_paths(opt.data_path, dataset, excluded_videos)
         #paths.extend(get_video_paths(opt.data_path, dataset, excluded_videos))
     else:
-        paths = get_video_paths(os.path.join(opt.data_path, "manipulated_sequences"), dataset)
-        paths.extend(get_video_paths(os.path.join(opt.data_path, "original_sequences"), dataset))
-    
-    with Pool(processes=cpu_count()-2) as p:
+        paths = get_video_paths(os.path.join(opt.data_path), dataset)
+        paths.extend(get_video_paths(os.path.join(opt.data_path), dataset))
+
+    with Pool(processes=1) as p:
         with tqdm(total=len(paths)) as pbar:
             for v in p.imap_unordered(partial(extract_video, root_dir=opt.data_path, dataset=dataset), paths):
                 pbar.update()
